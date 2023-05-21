@@ -4,6 +4,7 @@ import { RegisterDto } from './dto/register.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { RefreshTokenDto } from './dto/refreshToken.dto';
 
 @Controller('auth')
 export class AuthController {
@@ -30,5 +31,11 @@ export class AuthController {
         await this.authService.logout(token);
         return { message: 'Logged out successfully' };
     }
+
+    @Post('refresh')
+    async refresh(@Body() refreshTokenDto: RefreshTokenDto) {
+    return this.authService.refresh(refreshTokenDto.refreshToken);
+    }
+
    
 }

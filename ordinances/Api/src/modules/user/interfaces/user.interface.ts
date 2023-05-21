@@ -11,6 +11,8 @@ export interface User {
     password: string;
     isAdmin: boolean;
     isActive: boolean;
+    refreshToken: string;
+    createdAt: Date;
     gender: Gender;
 }
   
