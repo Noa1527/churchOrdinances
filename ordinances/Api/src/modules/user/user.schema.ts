@@ -29,6 +29,12 @@ export class User {
     @Prop({default: false})
     isActive: Boolean;
 
+    @Prop()
+    refreshToken: string;
+
+    @Prop({default: Date.now})
+    createdAt: Date;
+
     @Prop({type: String, enum: Object.values(Gender), default: Gender.Male})
     gender: Gender;
 

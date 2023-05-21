@@ -4,6 +4,7 @@ import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
 import { JwtPayload } from './strategies/jwt-payload.interface';
 import { RegisterDto } from './dto/register.dto';
+import { User } from '../user/interfaces/user.interface';
 
 
 @Injectable()
@@ -39,6 +40,7 @@ export class AuthService {
         password: hashedPassword,
         isAdmin: registerDto.isAdmin,
         isActive: registerDto.isActive,
+        createdAt: new Date(),
         gender: registerDto.gender,
     };
     // Enregistre le nouvel utilisateur dans la base de données
@@ -61,7 +63,25 @@ export class AuthService {
     return result;
     }
     return null;
-}
+  }
+
+  async refresh(refreshToken: string): Promise<any> {
+    try {
+      const payload = await this.jwtService.verifyAsync(refreshToken);
+
+      const user = await this.userService.findOneById(payload.sub);
+      if (!user || user.refreshToken !== refreshToken) {
+        throw new UnauthorizedException();
+      }
+
+      const newPayload = { email: user.email, sub: user._id, isAdmin: user.isAdmin };
+      return {
+        access_token: await this.jwtService.signAsync(newPayload, { expiresIn: '15m' }),
+      };
+    } catch (err) {
+      throw new UnauthorizedException();
+    }
+  }
 
   async login(email: string, pass: string): Promise<any> {
     console.log("1",email, pass);
@@ -77,13 +97,19 @@ export class AuthService {
     const payload = { email: user.email, sub: user._id, isAdmin: user.isAdmin };
     console.log("4",payload);
     
+    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+    await this.userService.updateRefreshToken(user._id.toString(), refreshToken);
+
     return {
       access_token: await this.jwtService.signAsync(payload),
+      refresh_token: refreshToken,
     };
   }
 
-  async logout(jwt: string) {
-    this.jwtBlacklist.push(jwt);
+
+  async logout(user: User) {
+    await this.userService.updateRefreshToken(user._id, null);
+    this.jwtBlacklist.push(user.refreshToken);
   }
   isBlacklisted(jwt: string): boolean {
     return this.jwtBlacklist.includes(jwt);
