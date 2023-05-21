@@ -8,7 +8,11 @@ import { RegisterDto } from './dto/register.dto';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UserService, private jwtService: JwtService) {}
+  private jwtBlacklist: string[] = [];  
+  constructor(
+    private userService: UserService, 
+    private jwtService: JwtService,
+  ) {}
 
   private async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt();
@@ -76,5 +80,12 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     };
+  }
+
+  async logout(jwt: string) {
+    this.jwtBlacklist.push(jwt);
+  }
+  isBlacklisted(jwt: string): boolean {
+    return this.jwtBlacklist.includes(jwt);
   }
 }

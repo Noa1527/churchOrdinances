@@ -1,6 +1,7 @@
 import { Body, Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './interfaces/user.interface';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 // import { AuthGuard } from '../auth/guards/jwt-auth.guard';
 // import { AuthGuard } from '@nestjs/passport';
 
@@ -9,7 +10,7 @@ export class UserController {
     constructor(private readonly userService: UserService) {}
 
     // @get all users
-    // @UseGuards(AuthGuard)
+    @UseGuards(JwtAuthGuard)
     @Get()
     async findAll() {
         return this.userService.findAll();
