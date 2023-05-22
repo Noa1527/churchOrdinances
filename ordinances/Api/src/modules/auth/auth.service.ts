@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
@@ -48,17 +48,12 @@ export class AuthService {
   }
 
   async validateUser(email: string, pass: string): Promise<any> {
-    console.log('validateUser: ', email, pass);
     const user = await this.userService.findOneByEmail(email);
-    console.log('validateUser1: ', user);
-    let passwordCrypt = bcrypt.compare(pass, user.password)
-    console.log('crypte', passwordCrypt);
     
     if (user && bcrypt.compare(pass, user.password)) {
         console.log('validateUser2: ', user, ' is valid', pass, user.password, 'bcrypt', bcrypt.compare(pass, user.password), );
         
     const { password, ...result } = user;
-    console.log('validateUser3: ', result);
     
     return result;
     }
@@ -84,18 +79,13 @@ export class AuthService {
   }
 
   async login(email: string, pass: string): Promise<any> {
-    console.log("1",email, pass);
     const user = await this.userService.findOneByEmail(email);
-    console.log("2",user);
     let passwordCrypt = bcrypt.compare(pass, user.password)
-    console.log("3",passwordCrypt);
     if (!passwordCrypt) {
         throw new UnauthorizedException();   
     } 
-    console.log( user.email,  user._id,  user.isAdmin);
     
     const payload = { email: user.email, sub: user._id, isAdmin: user.isAdmin };
-    console.log("4",payload);
     
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
     await this.userService.updateRefreshToken(user._id.toString(), refreshToken);
@@ -106,6 +96,70 @@ export class AuthService {
     };
   }
 
+  async updatePassword(userId: string, newPassword: string, currentPassword: string): Promise<void> {
+    const user = await this.userService.findOneById(userId);
+    console.log(user);
+    
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    // Vérifier le mot de passe actuel
+    const validPassword = await bcrypt.compare(currentPassword, user.password);
+    console.log('validPassword: ', validPassword, );
+    console.log('user.password: ', user.password);
+    console.log('currentPassword: ', currentPassword,);
+    console.log('newPassword',newPassword);
+    
+    
+    
+    if (!validPassword) {
+      throw new UnauthorizedException('Current password is incorrect');
+    }
+
+    // Vérifier la complexité du nouveau mot de passe
+    if (newPassword.length < 8) {
+      throw new BadRequestException('New password must be at least 8 characters long');
+    }
+    if (!/[0-9]/.test(newPassword)) {
+      throw new BadRequestException('New password must contain at least one digit');
+    }
+    if (!/[A-Z]/.test(newPassword)) {
+      throw new BadRequestException('New password must contain at least one uppercase letter');
+    }
+
+    // Hacher et enregistrer le nouveau mot de passe
+    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    user.password = hashedPassword;
+
+    await user.save();
+  }
+  
+  async updateIsAdmin(email: string, isAdmin: boolean): Promise<void> {
+    const user = await this.userService.findOneByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    user.isAdmin = isAdmin;
+
+    await user.save();
+  }
+
+  async updateIsActive(email: string, isActive: boolean): Promise<void> {
+    const user = await this.userService.findOneByEmail(email);
+
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+
+    user.isActive = isActive;
+
+    await user.save();
+
+
+  }
 
   async logout(user: User) {
     await this.userService.updateRefreshToken(user._id, null);
