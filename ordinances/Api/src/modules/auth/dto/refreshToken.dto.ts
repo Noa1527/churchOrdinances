@@ -1,7 +1,7 @@
-import { IsString } from "class-validator";
+// import { IsString } from "class-validator";
 
-export class RefreshTokenDto {
-    @IsString()
-    readonly refreshToken: string;
-  }
+// export class RefreshTokenDto {
+//     @IsString()
+//     readonly refreshToken: string;
+//   }
   

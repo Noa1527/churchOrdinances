@@ -1,10 +1,11 @@
 import { BadRequestException, ConflictException, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { UserService } from '../user/user.service';
-import * as bcrypt from 'bcrypt';
 import { JwtService } from '@nestjs/jwt';
-import { JwtPayload } from './strategies/jwt-payload.interface';
 import { RegisterDto } from './dto/register.dto';
-import { User } from '../user/interfaces/user.interface';
+import * as bcrypt from 'bcrypt';
+import * as moment from 'moment';
+// import { JwtPayload } from './strategies/jwt-payload.interface';
+// import { User } from '../user/interfaces/user.interface';
 
 
 @Injectable()
@@ -60,39 +61,43 @@ export class AuthService {
     return null;
   }
 
-  async refresh(refreshToken: string): Promise<any> {
-    try {
-      const payload = await this.jwtService.verifyAsync(refreshToken);
+  // async refresh(refreshToken: string): Promise<any> {
+  //   try {
+  //     const payload = await this.jwtService.verifyAsync(refreshToken);
 
-      const user = await this.userService.findOneById(payload.sub);
-      if (!user || user.refreshToken !== refreshToken) {
-        throw new UnauthorizedException();
-      }
+  //     const user = await this.userService.findOneById(payload.sub);
+  //     if (!user || user.refreshToken !== refreshToken) {
+  //       throw new UnauthorizedException();
+  //     }
 
-      const newPayload = { email: user.email, sub: user._id, isAdmin: user.isAdmin };
-      return {
-        access_token: await this.jwtService.signAsync(newPayload, { expiresIn: '15m' }),
-      };
-    } catch (err) {
-      throw new UnauthorizedException();
-    }
-  }
+  //     const newPayload = { email: user.email, sub: user._id, isAdmin: user.isAdmin };
+  //     return {
+  //       access_token: await this.jwtService.signAsync(newPayload, { expiresIn: '15m' }),
+  //     };
+  //   } catch (err) {
+  //     throw new UnauthorizedException();
+  //   }
+  // }
 
   async login(email: string, pass: string): Promise<any> {
+
     const user = await this.userService.findOneByEmail(email);
+
     let passwordCrypt = bcrypt.compare(pass, user.password)
+
     if (!passwordCrypt) {
         throw new UnauthorizedException();   
     } 
     
     const payload = { email: user.email, sub: user._id, isAdmin: user.isAdmin };
     
-    const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
-    await this.userService.updateRefreshToken(user._id.toString(), refreshToken);
+    // const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
+    // await this.userService.updateRefreshToken(user._id.toString(), refreshToken);
 
     return {
       access_token: await this.jwtService.signAsync(payload),
-      refresh_token: refreshToken,
+      expires_in: moment().add(7, 'days').unix(),
+      // refresh_token: refreshToken,
     };
   }
 
@@ -161,11 +166,11 @@ export class AuthService {
 
   }
 
-  async logout(user: User) {
-    await this.userService.updateRefreshToken(user._id, null);
-    this.jwtBlacklist.push(user.refreshToken);
-  }
-  isBlacklisted(jwt: string): boolean {
-    return this.jwtBlacklist.includes(jwt);
-  }
+  // async logout(user: User) {
+  //   await this.userService.updateRefreshToken(user._id, null);
+  //   this.jwtBlacklist.push(user.refreshToken);
+  // }
+  // isBlacklisted(jwt: string): boolean {
+  //   return this.jwtBlacklist.includes(jwt);
+  // }
 }

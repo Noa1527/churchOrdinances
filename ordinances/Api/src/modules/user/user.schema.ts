@@ -29,8 +29,8 @@ export class User {
     @Prop({default: false})
     isActive: Boolean;
 
-    @Prop()
-    refreshToken: string;
+    // @Prop()
+    // refreshToken: string;
 
     @Prop({default: Date.now})
     createdAt: Date;
