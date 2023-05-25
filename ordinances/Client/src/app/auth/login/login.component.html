@@ -1,0 +1,13 @@
+<!-- login.component.html -->
+<form #loginForm="ngForm" (ngSubmit)="onSubmit(loginForm)">
+    <mat-form-field>
+      <input matInput type="text" placeholder="Email" name="email" ngModel required>
+    </mat-form-field>
+  
+    <mat-form-field>
+      <input matInput type="password" placeholder="Password" name="password" ngModel required>
+    </mat-form-field>
+  
+    <button mat-raised-button color="primary" type="submit" [disabled]="!loginForm.form.valid">Login</button>
+</form>
+  

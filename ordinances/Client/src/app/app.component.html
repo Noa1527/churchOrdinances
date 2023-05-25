@@ -1,7 +1,8 @@
-<nav>
-  <a routerLink="/login" *ngIf="!authService.isLoggedIn">Login</a>
-  <a routerLink="/signup" *ngIf="!authService.isLoggedIn">Signup</a>
-  <a routerLink="/profile" *ngIf="authService.isLoggedIn">Profile</a>
-  <a (click)="authService.logout()" *ngIf="authService.isLoggedIn">Logout</a>
-</nav>
+<mat-toolbar color="primary">
+  <button mat-button routerLink="/login" *ngIf="!authService.isLoggedIn()">Connexion</button>
+  <button mat-button routerLink="/register" *ngIf="!authService.isLoggedIn()">Inscription</button>
+  <button mat-button routerLink="/profile" *ngIf="authService.isLoggedIn()">Profile</button>
+  <button mat-button (click)="authService.logout()" *ngIf="authService.isLoggedIn()">Logout</button>
+</mat-toolbar>
+
 <router-outlet></router-outlet>

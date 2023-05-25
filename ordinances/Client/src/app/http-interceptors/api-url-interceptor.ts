@@ -2,7 +2,7 @@ import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/c
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from 'environement/environement';
-import { AuthService } from '../services/auth/auth.service';
+import { AuthService } from 'src/app/auth/service/auth.service';
 
 @Injectable()
 export class ApiUrlInterceptor implements HttpInterceptor {
