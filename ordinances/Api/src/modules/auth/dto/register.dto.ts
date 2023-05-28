@@ -1,9 +1,9 @@
 import { IsString, IsEmail, MinLength, IsBoolean } from 'class-validator';
 
-export enum Gender {
-    Male = 'H',
-    Female = 'F',
-} 
+// export enum Gender {
+//     Male = 'H',
+//     Female = 'F',
+// } 
 
 
 export class RegisterDto {
@@ -20,13 +20,13 @@ export class RegisterDto {
     @MinLength(8)
     readonly password: string;
 
-    @IsBoolean()
-    readonly isAdmin: boolean;
+    // @IsBoolean()
+    // readonly isAdmin: boolean;
 
-    @IsBoolean()
-    readonly isActive: boolean;
+    // @IsBoolean()
+    // readonly isActive: boolean;
 
-    @IsString()
-    readonly gender: Gender;
+    // @IsString()
+    // readonly gender: Gender;
 
 }

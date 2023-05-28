@@ -1,7 +1,7 @@
 import { HttpEvent, HttpHandler, HttpInterceptor, HttpRequest } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from 'environement/environement';
+import { environment } from 'environments/environement';
 import { AuthService } from 'src/app/auth/service/auth.service';
 
 @Injectable()
@@ -14,7 +14,11 @@ export class ApiUrlInterceptor implements HttpInterceptor {
     let editReq = req.clone();
     if (req.url.includes('/api/')) {
       editReq = req.clone({url: `${environment.apiUrl}${req.url.replace('/api/', '/')}`});
+      console.log(editReq);
+      
     }
+    console.log(next.handle(editReq));
+    
     return next.handle(editReq);
   }
 }

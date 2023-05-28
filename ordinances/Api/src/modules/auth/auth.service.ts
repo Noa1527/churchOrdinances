@@ -39,10 +39,10 @@ export class AuthService {
         lastName: registerDto.lastName,
         email: email,
         password: hashedPassword,
-        isAdmin: registerDto.isAdmin,
-        isActive: registerDto.isActive,
+        // isAdmin: registerDto.isAdmin,
+        // isActive: registerDto.isActive,
         createdAt: new Date(),
-        gender: registerDto.gender,
+        // gender: registerDto.gender,
     };
     // Enregistre le nouvel utilisateur dans la base de données
     return this.userService.create(newUser);

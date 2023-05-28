@@ -27,16 +27,21 @@ export class AuthService {
     // }
 
     getAuthorizationToken(): string | null {
-        console.log('getAuthorizationToken2');
+        // get the token from local storage
         return localStorage.getItem('access_token');
     }
 
+    register(user: any): Observable<any> {
+        return this.http.post<any>('/api/auth/register', user);
+    }
+
     login(email: string, password: string): Observable<any> {
-        console.log('login1');
+        console.log('login');
+        console.log('email', email, 'password', password);
         
         return this.http
             .post<any>('/api/auth/login', { email, password })
-            .pipe(tap(this.setSession));
+            .pipe(tap(response => this.setSession(response.access_token)));
     }
     
     // TO LINK
@@ -46,27 +51,18 @@ export class AuthService {
     //         .pipe(tap(this.setSession));
     // }
 
-    // eslint-disable-next-line @typescript-eslint/naming-convention
-    setSession(authResult: { access_token: string }): void {
-        console.log('setSession3');
-        localStorage.setItem('access_token', authResult.access_token);
+    setSession(token: string): void {
+        // set the token in local storage
+        localStorage.setItem('access_token', token);
     }
 
     magicSignIn(input: { email: string }): Observable<any>
     {
-        console.log('magicSignIn Front');
-        
-        console.log(input);
-
-        console.log('throwError1', this.isLoggedIn());
         // Throw error, if the user is already logged in
         if ( this.isLoggedIn() === true)
         {
-            console.log('throwError2', this.isLoggedIn());
-          
-                throw throwError('User is already logged in.');
+            throw throwError('L\'utilisateur est déjà connecté.');
         }
-        console.log('je lance le post');
         return this.http.post<any>('/api/auth/magic-sign-in', input).pipe(
             switchMap((response: any) => of(response))
         );
@@ -77,16 +73,22 @@ export class AuthService {
         // Throw error, if the user is already logged in
         if ( this.isLoggedIn() )
         {
-            return throwError('User is already logged in.');
+            return throwError('L\'utilisateur est déjà connecté.');
         }
 
         return this.http.post('/api/auth/verify-magic-sign-in', { token }).pipe(
+            
             switchMap((response: any) => {
 
-                // Store the access token in the local storage
-                this.setSession(response.accessToken);
+                // store in local storage
+                this.setSession(response.access_token);
 
                 // Store the user on the user service
+                response = {
+                    access_token: response.access_token,
+                    expires_in: response.expires_in,
+                    user: response.user._doc
+                }
                 this.userService.user = response.user;
 
                 // Return a new observable with the response
@@ -100,18 +102,14 @@ export class AuthService {
     }
 
     public isLoggedIn(): boolean {
-        console.log('isLoggedIn4');
-        
+        // get the token from local storage
         const token = this.getAuthorizationToken();
-        console.log('token', token);
-        
+        // check if token is set, then check if token is valid
         if (!token) {
-            console.log('false sad');
             return false;
         }
         try {
             const isExpired = this.jwtHelper.isTokenExpired(token);
-            console.log('isExpired', isExpired);
             return !isExpired;
         } catch (e) {
             return false;
@@ -120,13 +118,12 @@ export class AuthService {
 
     public isAdmin(): boolean {
         const token = this.getAuthorizationToken();
-        console.log('isAdmin5', token);
-        
+        // check if token is set, then check if token is valid
         if (!token || this.jwtHelper.isTokenExpired(token)) {
             return false;
         }
+        // get the decoded token and its data to check if the user is an admin
         const decoded = this.jwtHelper.decodeToken(token);
-        console.log('decoded', decoded);
         return decoded.isAdmin;
     }
 

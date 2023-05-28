@@ -20,7 +20,6 @@ export class Ordinance {
 
     @Prop({default: false})
     Sealing: boolean;
-
     
 }
 

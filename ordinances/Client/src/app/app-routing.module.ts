@@ -21,6 +21,14 @@ const routes: Routes = [
       m => m.AuthModule
     ) 
   },
+  {
+    path: 'home',
+    loadChildren: () =>
+      import('src/app/home/home.module').then(
+        m => m.HomeModule
+      )
+  },
+
   // 2. routes without authentication
   // { 
   //   path: 'login', 

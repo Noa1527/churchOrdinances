@@ -23,10 +23,10 @@ export class User {
     @Prop({required: true})
     password: string;
     
-    @Prop({default: false})
+    @Prop({default: false, required: false})
     isAdmin: Boolean;
 
-    @Prop({default: false})
+    @Prop({default: false, required: false})
     isActive: Boolean;
 
     // @Prop()
@@ -35,7 +35,7 @@ export class User {
     @Prop({default: Date.now})
     createdAt: Date;
 
-    @Prop({type: String, enum: Object.values(Gender), default: Gender.Male})
+    @Prop({type: String, enum: Object.values(Gender)})
     gender: Gender;
 
     @Prop([{ type: String, ref: 'Comment' }])

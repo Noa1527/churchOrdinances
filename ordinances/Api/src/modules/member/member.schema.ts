@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 export enum Gender {
   Male = 'H',
@@ -26,17 +26,20 @@ export class Member {
     @Prop()
     phone: string;
 
-    @Prop({type: String, enum: Object.values(Gender), default: Gender.Male})
+    @Prop({type: String, enum: Object.values(Gender)})
     gender: Gender;
 
     @Prop([{ type: String, ref: 'Comment' }])
     comments: string[];
 
-    @Prop({ type: String, ref: 'Ordinance' })
-    ordinance: string;
+    // @Prop({ type: String, ref: 'Ordinance' })
+    // ordinance: string;
 
-    @Prop({ type: String, ref: 'Blessing' })
-    blessing: string;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Ordinance' })
+    ordinance: mongoose.Types.ObjectId;
+
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Blessing' })
+    blessing: mongoose.Types.ObjectId;
 }
 
 export const MemberSchema = SchemaFactory.createForClass(Member);

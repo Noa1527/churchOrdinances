@@ -3,7 +3,6 @@ import { UserDocument, User} from './user.schema';
 import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { get } from 'http';
 
 @Injectable()
 export class UserService {

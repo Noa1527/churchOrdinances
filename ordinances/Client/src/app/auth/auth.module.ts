@@ -11,7 +11,14 @@ import { AuthGuard } from './guards/auth.guard';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { FormsModule } from '@angular/forms';
+import { MatCardModule } from '@angular/material/card';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatOptionModule } from '@angular/material/core';
+import { MagicLoginComponent } from './magic-login/magic-login.component';
+import { VerifyMagicLoginComponent } from './magic-login/verify/verify-magic-login.component';
+
 
 const routes: Routes = [
   { 
@@ -26,6 +33,14 @@ const routes: Routes = [
     path:'logout', 
     component: LogoutComponent,
     canActivate: [() => inject(AuthGuard).canActivate] 
+  },
+  { 
+    path:'magic-login', 
+    component: MagicLoginComponent,
+  },
+  { 
+    path:'verify-magic-login/:token', 
+    component: VerifyMagicLoginComponent,
   }
   // autres routes d'authentification...
 ];
@@ -35,6 +50,8 @@ const routes: Routes = [
     LoginComponent,
     RegisterComponent,
     LogoutComponent,
+    MagicLoginComponent,
+    VerifyMagicLoginComponent,
     // autres composants d'authentification...
   ],
   imports: [
@@ -43,7 +60,12 @@ const routes: Routes = [
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
+    MatCardModule,
     FormsModule,
+    ReactiveFormsModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
+    MatOptionModule,
   ]
 })
 export class AuthModule { }
