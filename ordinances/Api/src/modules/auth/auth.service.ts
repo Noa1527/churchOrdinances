@@ -4,6 +4,7 @@ import { JwtService } from '@nestjs/jwt';
 import { RegisterDto } from './dto/register.dto';
 import * as bcrypt from 'bcrypt';
 import * as moment from 'moment';
+import { LeaderRoleService } from '../leader_role/leader_role.service';
 // import { JwtPayload } from './strategies/jwt-payload.interface';
 // import { User } from '../user/interfaces/user.interface';
 
@@ -12,6 +13,7 @@ import * as moment from 'moment';
 export class AuthService {
   private jwtBlacklist: string[] = [];  
   constructor(
+    private leaderRoleService: LeaderRoleService,
     private userService: UserService, 
     private jwtService: JwtService,
   ) {}
@@ -34,19 +36,27 @@ export class AuthService {
     const hashedPassword = await this.hashPassword(registerDto.password);
 
     // Crée un nouvel objet utilisateur
-    const newUser = {
+    let newUser = {
         firstName: registerDto.firstName,
         lastName: registerDto.lastName,
         email: email,
         password: hashedPassword,
-        // isAdmin: registerDto.isAdmin,
-        // isActive: registerDto.isActive,
+        isAdmin: registerDto.isAdmin,
+        isActive: registerDto.isActive,
         createdAt: new Date(),
-        // gender: registerDto.gender,
+        gender: registerDto.gender,
+        leaderRoles: null,
     };
+
+    if (registerDto.leaderRoles) {
+        const newLeaderRoles = await this.leaderRoleService.create(registerDto.leaderRoles);
+        newUser.leaderRoles = newLeaderRoles._id;
+    }
+
     // Enregistre le nouvel utilisateur dans la base de données
     return this.userService.create(newUser);
-  }
+}
+
 
   async validateUser(email: string, pass: string): Promise<any> {
     const user = await this.userService.findOneByEmail(email);

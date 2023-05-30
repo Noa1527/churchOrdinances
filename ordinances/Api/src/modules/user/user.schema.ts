@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 export enum Gender {
   Male = 'H',
@@ -41,8 +41,9 @@ export class User {
     @Prop([{ type: String, ref: 'Comment' }])
     comments: string[];
 
-    @Prop({ type: String, ref: 'LeaderRoles' })
-    leader_roles: string;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'LeaderRoles' })
+    leaderRoles: mongoose.Types.ObjectId;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

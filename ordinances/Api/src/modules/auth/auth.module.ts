@@ -7,11 +7,14 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LocalStrategy } from './strategies/local.strategy';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './strategies/jwt.startegy';
+import { LeaderRoleModule } from '../leader_role/leader_role.module';
+import { LeaderRoleService } from '../leader_role/leader_role.service';
 
 @Module({
   imports: [
     UserModule,
     PassportModule,
+    LeaderRoleModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

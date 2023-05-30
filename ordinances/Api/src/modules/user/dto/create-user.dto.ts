@@ -1,14 +1,9 @@
 import { Type } from 'class-transformer';
-import { IsString, IsEmail, MinLength, IsBoolean, IsOptional, ValidateNested } from 'class-validator';
+import { IsString, IsEmail, MinLength, IsBoolean, MaxLength, IsMongoId, IsOptional, ValidateNested,} from 'class-validator';
 import { CreateLeaderRoleDto } from 'src/modules/leader_role/dto/create-leader-role.dto';
 
-export enum Gender {
-    Male = 'H',
-    Female = 'F',
-} 
+export class CreateUserDto {
 
-
-export class RegisterDto {
     @IsString()
     readonly firstName: string;
     
@@ -20,6 +15,7 @@ export class RegisterDto {
 
     @IsString()
     @MinLength(8)
+    @MaxLength(60)
     readonly password: string;
 
     @IsBoolean()
@@ -28,12 +24,11 @@ export class RegisterDto {
     @IsBoolean()
     readonly isActive: boolean;
 
-    @IsString()
-    readonly gender: Gender;
-
     @IsOptional()
     @ValidateNested()
     @Type(() => CreateLeaderRoleDto)
-    leaderRoles?: CreateLeaderRoleDto; //
+    leaderRoles?: CreateLeaderRoleDto; // Use CreateOrdinanceDto
+
 
 }
+
