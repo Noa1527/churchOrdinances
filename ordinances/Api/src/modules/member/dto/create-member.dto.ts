@@ -3,6 +3,7 @@ import { Gender } from '../member.schema';
 import { Type } from 'class-transformer';
 import { CreateOrdinanceDto } from 'src/modules/ordinance/dto/create-ordinance.dto';
 import { CreateBlessingDto } from 'src/modules/blessing/dto/create-blessing.dto';
+import { CreateLeaderRoleDto } from 'src/modules/leader_role/dto/create-leader-role.dto';
 
 export class CreateMemberDto {
 
@@ -33,6 +34,11 @@ export class CreateMemberDto {
     @ValidateNested()
     @Type(() => CreateBlessingDto)
     blessing?: CreateBlessingDto; // Use CreateBlessingDto
+
+    @IsOptional()
+    @ValidateNested()
+    @Type(() => CreateLeaderRoleDto)
+    leaderRoles?: CreateLeaderRoleDto; //
 
 
 }

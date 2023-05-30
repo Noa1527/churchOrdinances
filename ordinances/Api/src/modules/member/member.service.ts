@@ -5,6 +5,7 @@ import mongoose, { Model } from 'mongoose';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { OrdinanceService } from '../ordinance/ordinance.service';
 import { BlessingService } from '../blessing/blessing.service';
+import { LeaderRoleService } from '../leader_role/leader_role.service';
 
 @Injectable()
 export class MemberService {
@@ -12,6 +13,7 @@ export class MemberService {
         @InjectModel(Member.name) private memberModel: Model<MemberDocument>, 
         private readonly ordinanceService: OrdinanceService,
         private readonly blessingService: BlessingService,
+        private readonly leaderRoleService: LeaderRoleService,
 
     ) {}
 
@@ -26,6 +28,11 @@ export class MemberService {
         if (member.blessing) {
             const newBlessing = await this.blessingService.create(member.blessing);
             newMember.blessing = newBlessing._id;
+        }
+
+        if (member.leaderRoles) {
+            const newLeaderRoles = await this.leaderRoleService.create(member.leaderRoles);
+            newMember.leaderRoles = newLeaderRoles._id;
         }
 
         return newMember.save();
@@ -46,11 +53,11 @@ export class MemberService {
     }
 
     async findAll() {
-        return await this.memberModel.find().populate('ordinance').exec();
+        return await this.memberModel.find().populate(['ordinance', 'blessing']).exec();
     }
 
     async findOneById(id: string) {
-       let bibou = await this.memberModel.findById(id).populate('ordinance').exec();
+       let bibou = await this.memberModel.findById(id).populate(['ordinance', 'blessing', 'leaderRoles']).exec();
          console.log(bibou);
         return bibou;
     }

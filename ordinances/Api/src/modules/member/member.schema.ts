@@ -32,8 +32,8 @@ export class Member {
     @Prop([{ type: String, ref: 'Comment' }])
     comments: string[];
 
-    // @Prop({ type: String, ref: 'Ordinance' })
-    // ordinance: string;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'LeaderRoles' })
+    leaderRoles: mongoose.Types.ObjectId;
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Ordinance' })
     ordinance: mongoose.Types.ObjectId;

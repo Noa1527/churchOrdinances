@@ -16,6 +16,12 @@ export class MemberController {
     }
 
     @UseGuards(JwtAuthGuard, AdminGuard)
+    @Get()
+    async findAll() {
+        return this.memberService.findAll();
+    }
+
+    @UseGuards(JwtAuthGuard, AdminGuard)
     @Get(':id')
     async findOneById(@Param('id') id: string) {
         return this.memberService.findOneById(id);

@@ -7,6 +7,8 @@ import { Ordinance, OrdinanceSchema } from '../ordinance/ordinance.schema';
 import { OrdinanceService } from '../ordinance/ordinance.service';
 import { Blessing, BlessingSchema } from '../blessing/blessing.schema';
 import { BlessingService } from '../blessing/blessing.service';
+import { LeaderRoles, LeaderRolesSchema } from '../leader_role/leader_role.schema';
+import { LeaderRoleService } from '../leader_role/leader_role.service';
 
 @Module({
   imports: [
@@ -14,10 +16,11 @@ import { BlessingService } from '../blessing/blessing.service';
       { name: Member.name, schema: MemberSchema },
       { name: Ordinance.name, schema: OrdinanceSchema },
       { name: Blessing.name, schema: BlessingSchema },
+      { name: LeaderRoles.name, schema: LeaderRolesSchema}
 
     ]),
   ],
-  providers: [MemberService, OrdinanceService, BlessingService],
+  providers: [MemberService, OrdinanceService, BlessingService, LeaderRoleService],
   controllers: [MemberController]
 })
 export class MemberModule {}
