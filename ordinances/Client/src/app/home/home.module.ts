@@ -3,10 +3,17 @@ import { CommonModule } from '@angular/common';
 import { HomeComponent } from './home.component';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { RouterModule, Routes } from '@angular/router';
+import { MatTabsModule } from '@angular/material/tabs';
+import { BpModule } from '../bp/bp.module';
+import { ElderModule } from '../elder/elder.module';
+import { JeuneFillesModule } from '../jeune-filles/jeune-filles.module';
+import { JeuneGensModule } from '../jeune-gens/jeune-gens.module';
+import { PrimaireModule } from '../primaire/primaire.module';
+import { SocieteModule } from '../societe/societe.module';
 
 const routes: Routes = [
   { 
-    path:'home', 
+    path:'', 
     component: HomeComponent,
     canActivate: [() => inject(AuthGuard).canActivate] 
   }
@@ -19,7 +26,15 @@ const routes: Routes = [
   ],
   imports: [
     CommonModule,
-    RouterModule.forChild(routes) // register the routes
-  ]
+    MatTabsModule,
+    RouterModule.forChild(routes), // register the routes
+    BpModule,
+    ElderModule,
+    JeuneFillesModule,
+    JeuneGensModule,
+    PrimaireModule,
+    SocieteModule,
+  ],
+  
 })
 export class HomeModule { }
