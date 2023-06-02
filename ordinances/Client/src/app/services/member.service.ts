@@ -17,7 +17,7 @@ export class MemberService {
     ) { }
 
     getAllMembers(): Observable<any> {
-         return this.http.get<any>('/api/members');
+         return this.http.get<any>('/api/member');
     }
 
 }
