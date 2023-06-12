@@ -23,7 +23,7 @@ export class LogoutComponent implements OnInit {
       this.countdown--;
       if (this.countdown === 0) {
         clearInterval(interval);
-        this.router.navigate(['/sign-in']);
+        this.router.navigate(['/login']);
       }
     }, 1000);
   }

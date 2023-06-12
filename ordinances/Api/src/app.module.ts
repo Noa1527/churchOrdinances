@@ -10,6 +10,7 @@ import { OrdinanceModule } from './modules/ordinance/ordinance.module';
 import { BlessingModule } from './modules/blessing/blessing.module';
 import { LeaderRoleModule } from './modules/leader_role/leader_role.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { TeamsModule } from './modules/teams/teams.module';
 
 @Module({
   imports: [
@@ -32,6 +33,7 @@ import { AuthModule } from './modules/auth/auth.module';
     BlessingModule,
     LeaderRoleModule,
     AuthModule,
+    TeamsModule,
 
   ],
   controllers: [AppController],

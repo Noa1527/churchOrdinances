@@ -15,6 +15,32 @@ export class AuthService {
         public jwtHelper: JwtHelperService,
         private userService: UserService,
     ) { }
+    
+     // Maintenant, currentUser a un tableau de rôles
+    // currentUser: any = {
+    //     roles: [
+    //         'Président De Branche', 
+    //         'Prêtrise',
+    //         'Société Secours',
+    //         'Jeunes Gens',
+    //         'Jeunes Filles',
+    //         'Primaire',
+    //     ] // Ici, remplacez ceci par les rôles actuels de l'utilisateur.
+    // };
+    currentRole: any = {};
+
+  // Cette méthode vérifie si l'utilisateur a un certain rôle
+  public hasRole(role: string): boolean {
+    const currentRole = this.curentUser();
+
+    // check if currentUser is valid and if it has the required role
+    if (currentRole && currentRole.roles) {
+        return currentRole.roles.includes(role);
+    }
+
+    // if currentUser is not valid or does not have roles, return false
+    return false;
+}
 
     // forgotPassword(email: string): Observable<any> {
     //     return this.http.post<any>('/api/auth/forgot-password', { email });
@@ -36,8 +62,6 @@ export class AuthService {
     }
 
     login(email: string, password: string): Observable<any> {
-        console.log('login');
-        console.log('email', email, 'password', password);
         
         return this.http
             .post<any>('/api/auth/login', { email, password })
@@ -124,8 +148,36 @@ export class AuthService {
         }
         // get the decoded token and its data to check if the user is an admin
         const decoded = this.jwtHelper.decodeToken(token);
+        
         return decoded.isAdmin;
     }
+
+    public curentUser(): any {
+        const token = this.getAuthorizationToken();
+        // check if token is set, then check if token is valid
+        if (!token || this.jwtHelper.isTokenExpired(token)) {
+            return false;
+        }
+        // get the decoded token and its data to check if the user is an admin  
+        const decoded = this.jwtHelper.decodeToken(token);
+        return decoded;
+    }
+
+    // public hasRole(role: string): boolean {
+    //     const token = this.getAuthorizationToken();
+    //     // check if token is set, then check if token is valid
+    //     if (!token || this.jwtHelper.isTokenExpired(token)) {
+    //         return false;
+    //     }
+    //     // get the decoded token and its data to check if the user is an admin
+    //     const decoded = this.jwtHelper.decodeToken(token);
+    //     console.log('decoded', decoded);
+    //     console.log('decoded.roles', decoded.roles);
+    //     console.log('decoded.roles.includes(role)', decoded.roles.includes(role));
+        
+        
+    //     return decoded.roles.includes(role);
+    // }
 
     logout(): void {
         localStorage.removeItem('access_token');

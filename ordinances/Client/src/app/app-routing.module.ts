@@ -29,23 +29,6 @@ const routes: Routes = [
       )
   },
 
-  // 2. routes without authentication
-  // { 
-  //   path: 'login', 
-  //   component: LoginComponent 
-  // },
-  // { 
-  //   path: 'signup', 
-  //   component: SignupComponent 
-  // },
-  
-  // 3. routes with authentication
-  // { 
-  //   path: 'profile', 
-  //   component: ProfileComponent, 
-  //   canActivate: [() => inject(AuthGuard).canActivate],
-  // },
-
   // 4. Admin routes
 ];
 

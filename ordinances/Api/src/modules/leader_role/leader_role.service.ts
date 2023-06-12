@@ -11,4 +11,12 @@ export class LeaderRoleService {
         const newLeaderRoles = new this.leaderRoleModel(leaderRole);
         return newLeaderRoles.save();
     }
+
+    async findOneById(id: string): Promise<LeaderRolesDocument> {
+        return this.leaderRoleModel.findById(id).exec();
+    }
+
+    async findOneByName(name: string): Promise<LeaderRolesDocument> {
+        return this.leaderRoleModel.findOne({ name }).exec();
+    }
 }

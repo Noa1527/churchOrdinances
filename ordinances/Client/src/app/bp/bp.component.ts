@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { MemberService } from '../services/member.service';
+import { Member } from '../intefaces/member.interface';
+import { MatTableDataSource } from '@angular/material/table';
 
 @Component({
   selector: 'app-bp',
@@ -7,13 +9,16 @@ import { MemberService } from '../services/member.service';
   styleUrls: ['./bp.component.css']
 })
 export class BpComponent implements OnInit {
-  member: Array<any> = [];
+
+  member: MatTableDataSource<Member>;
+  
   displayedColumns: string[] = [
     'firstName', 
     'lastName', 
     'email', 
     'age', 
-    'gender',  
+    'gender', 
+    'phone', 
     'ordinance.Baptism', 
     'ordinance.PriestHood', 
     'ordinance.Initiatory', 
@@ -23,7 +28,9 @@ export class BpComponent implements OnInit {
     // 'comments' 
   ];
 
-  constructor(private memberService: MemberService) { }
+  constructor(private memberService: MemberService) { 
+    this.member = new MatTableDataSource();
+  }
 
   ngOnInit(): void {
     this.getMembers();
@@ -33,7 +40,8 @@ export class BpComponent implements OnInit {
     this.memberService.getAllMembers().subscribe((members: any[]) => {
       console.log(members);
       
-      this.member = members;
+      this.member = new MatTableDataSource(members);
+
     });
   }
 
@@ -46,5 +54,34 @@ export class BpComponent implements OnInit {
         age--;
     }
     return age;
-}
+  }
+
+  // applyFilter(event: Event, field: string) {
+  //   const filterValue = (event.target as HTMLInputElement).value;
+  //   this.member.filterPredicate = (data: any, filter: string) => {
+  //     return data[field].toLowerCase().includes(filter);
+  //   };
+  //   this.member.filter = filterValue.trim().toLowerCase();
+  // }
+
+  filterValues: Record<string, string> = {};
+  
+  applyFilter(filterValue: string, columnName: string) {
+
+    this.filterValues[columnName] = filterValue;
+    this.member.filterPredicate = (data: any, filter: string) => {
+      let filterArray = filter.split(',');
+
+      return filterArray.every(filterValue => {
+        let pair = filterValue.split(':');
+        return data[pair[0]].trim().toLowerCase().includes(pair[1]);
+      });
+
+    };
+    
+    let finalFilter = Object.keys(this.filterValues).map(key => `${key}:${this.filterValues[key]}`).join(',');
+    this.member.filter = finalFilter.trim();
+  }
+
+  
 }

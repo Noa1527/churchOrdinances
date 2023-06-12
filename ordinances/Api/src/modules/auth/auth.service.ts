@@ -92,6 +92,8 @@ export class AuthService {
   async login(email: string, pass: string): Promise<any> {
 
     const user = await this.userService.findOneByEmail(email);
+    console.log('user',user);
+    
 
     let passwordCrypt = bcrypt.compare(pass, user.password)
 
@@ -99,7 +101,19 @@ export class AuthService {
         throw new UnauthorizedException();   
     } 
     
-    const payload = { email: user.email, sub: user._id, isAdmin: user.isAdmin };
+    // Get the leaderRoles document for the user
+    const leaderRoles = await this.leaderRoleService.findOneById(user.leaderRoles.toString());
+    console.log('leaderRoles',leaderRoles);
+    
+
+    const payload = { 
+        email: user.email, 
+        sub: user._id, 
+        isAdmin: user.isAdmin,
+        roles: leaderRoles.roles  // Add the user roles to the payload
+    };
+    console.log('payload',payload);
+    
     
     // const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
     // await this.userService.updateRefreshToken(user._id.toString(), refreshToken);

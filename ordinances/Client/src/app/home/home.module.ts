@@ -10,6 +10,8 @@ import { JeuneFillesModule } from '../jeune-filles/jeune-filles.module';
 import { JeuneGensModule } from '../jeune-gens/jeune-gens.module';
 import { PrimaireModule } from '../primaire/primaire.module';
 import { SocieteModule } from '../societe/societe.module';
+import { AuthService } from '../auth/service/auth.service';
+import { ElderPastoralModule } from '../elder-pastoral/elder-pastoral.module';
 
 const routes: Routes = [
   { 
@@ -23,6 +25,7 @@ const routes: Routes = [
 @NgModule({
   declarations: [
     HomeComponent,
+    
   ],
   imports: [
     CommonModule,
@@ -30,11 +33,16 @@ const routes: Routes = [
     RouterModule.forChild(routes), // register the routes
     BpModule,
     ElderModule,
+    ElderPastoralModule,
     JeuneFillesModule,
     JeuneGensModule,
     PrimaireModule,
     SocieteModule,
+
   ],
+  providers: [
+    AuthService,
+  ]
   
 })
 export class HomeModule { }

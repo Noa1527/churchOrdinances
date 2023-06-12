@@ -70,5 +70,10 @@ export class MemberService {
         return await this.memberModel.findOne({ lastName }).exec();
     }
 
+    async findOneByEmail(email: string) {
+        return await this.memberModel.findOne({ email }).exec();
+    }
+    
+
 
 }

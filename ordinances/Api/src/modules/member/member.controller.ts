@@ -27,5 +27,28 @@ export class MemberController {
         return this.memberService.findOneById(id);
     }
 
+    @UseGuards(JwtAuthGuard, AdminGuard)
+    @Post(':id')
+    async update(@Param('id') id: string, @Body() createMemberDto: CreateMemberDto) {
+        return this.memberService.update(id, createMemberDto);
+    }
+
+    // @UseGuards(JwtAuthGuard, AdminGuard)
+    // @Post(':id/ordinance')
+    // async addOrdinance(@Param('id') id: string, @Body() ordinanceId: string) {
+    //     return this.memberService.addOrdinance(id, ordinanceId);
+    // }
+
+    // @UseGuards(JwtAuthGuard, AdminGuard)
+    // @Post(':id/blessing')
+    // async addBlessing(@Param('id') id: string, @Body() blessingId: string) {
+    //     return this.memberService.addBlessing(id, blessingId);
+    // }
+
+    // @UseGuards(JwtAuthGuard, AdminGuard)
+    // @Get(':name')
+    // async findOneByName(@Param('name') name: string) {
+    //     return this.memberService.findOneByHisRole(name);
+    // }
 
 }

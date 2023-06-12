@@ -20,4 +20,11 @@ export class MemberService {
          return this.http.get<any>('/api/member');
     }
 
+    // getAllMembersByRoleBP(role: string): Observable<any> {
+    //     return this.http.get<any>(`/api/member/${role}`);
+    // }
+    // getAllMembersByRoleElder(role: string): Observable<any> {
+    //     return this.http.get<any>(`/api/member/${role}`);
+    // }
+
 }
