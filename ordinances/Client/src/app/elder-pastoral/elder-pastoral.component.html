@@ -10,7 +10,7 @@
       (cdkDropListDropped)="drop($event)">
       <div class="example-box" *ngFor="let member of pretriseMembers" cdkDrag>{{member.firstName + ' ' + member.lastName}}</div>
     </div>
-  </div>
+  </div> 
 
   <div class="example-container" *ngFor="let team of teams; index as i">
     <h2>Équipe {{i + 1}}</h2>

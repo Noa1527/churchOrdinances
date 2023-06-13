@@ -41,7 +41,7 @@ export class ElderPastoralComponent implements OnInit {
         console.log(event.previousContainer.data,
           event.container.data,
           event.previousIndex,
-          event.currentIndex,);
+          event.currentIndex,); 
         
       if (event.previousContainer.id === 'pretriseMembers') {
         this.teamsService.updateTeam(event.container.id, { members: event.container.data.map(m => m._id) }).subscribe();

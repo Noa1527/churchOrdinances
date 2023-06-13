@@ -32,7 +32,7 @@ export class MemberController {
 
     @UseGuards(JwtAuthGuard, AdminGuard)
     @Get('/:id([0-9a-fA-F]{24})')
-    async findOneById(@Param('id') id: string) {
+    async findOneById(@Param('id') id: string) { 
         return this.memberService.findOneById(id);
     }
 

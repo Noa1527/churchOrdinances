@@ -38,7 +38,7 @@ export class CreateMemberDto {
     @IsOptional()
     @ValidateNested()
     @Type(() => CreateLeaderRoleDto)
-    leaderRoles?: CreateLeaderRoleDto; //
+    leaderRoles?: CreateLeaderRoleDto; // Use CreateLeaderRoleDto
 
 
 }

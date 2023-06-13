@@ -82,7 +82,7 @@ export class MemberService {
                 path: 'leaderRoles',
                 match: { roles: { $in: [Roles.BranchPresident, Roles.EldersQuorum] } }
             })
-            .exec();
+            .exec(); 
         leaders = leaders.filter(member => member.leaderRoles !== null);
         console.log('leader -->',leaders);
         return leaders;
