@@ -38,10 +38,7 @@ export class ElderComponent implements OnInit {
 
   getMembers(): void {
     this.memberService.getAllMembers().subscribe((members: any[]) => {
-      console.log(members);
-      
       this.member = new MatTableDataSource(members);
-
     });
   }
 

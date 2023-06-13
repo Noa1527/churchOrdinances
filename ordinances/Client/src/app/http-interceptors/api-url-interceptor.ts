@@ -14,11 +14,8 @@ export class ApiUrlInterceptor implements HttpInterceptor {
     let editReq = req.clone();
     if (req.url.includes('/api/')) {
       editReq = req.clone({url: `${environment.apiUrl}${req.url.replace('/api/', '/')}`});
-      console.log('ici le req',editReq);
       
     }
-    console.log('appret le if',next.handle(editReq));
-    
     return next.handle(editReq);
   }
 }

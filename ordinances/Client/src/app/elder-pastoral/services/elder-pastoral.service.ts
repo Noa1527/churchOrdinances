@@ -17,4 +17,8 @@ export class TeamsService {
   updateTeam(seq: string, team: any): Observable<any> {
     return this.http.patch(`/api/teams/${seq}`, team);
   }
+
+  getLeaders(): Observable<any> {
+    return this.http.get('/api/member/leaders');
+  }
 }

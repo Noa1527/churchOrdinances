@@ -6,6 +6,8 @@ import { CreateMemberDto } from './dto/create-member.dto';
 import { OrdinanceService } from '../ordinance/ordinance.service';
 import { BlessingService } from '../blessing/blessing.service';
 import { LeaderRoleService } from '../leader_role/leader_role.service';
+import { log } from 'console';
+import { Roles } from '../leader_role/leader_role.schema';
 
 @Injectable()
 export class MemberService {
@@ -74,6 +76,17 @@ export class MemberService {
         return await this.memberModel.findOne({ email }).exec();
     }
     
+    async findLeaders(): Promise<Member[]> {
+        let leaders = await this.memberModel.find()
+            .populate({
+                path: 'leaderRoles',
+                match: { roles: { $in: [Roles.BranchPresident, Roles.EldersQuorum] } }
+            })
+            .exec();
+        leaders = leaders.filter(member => member.leaderRoles !== null);
+        console.log('leader -->',leaders);
+        return leaders;
+    }
 
 
 }

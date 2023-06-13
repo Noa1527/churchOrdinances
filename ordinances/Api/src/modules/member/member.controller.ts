@@ -3,6 +3,7 @@ import { MemberService } from './member.service';
 import { AdminGuard } from '../auth/guards/admin.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { CreateMemberDto } from './dto/create-member.dto';
+import { Member } from './member.schema';
 
 @Controller('member')
 export class MemberController {
@@ -22,16 +23,26 @@ export class MemberController {
     }
 
     @UseGuards(JwtAuthGuard, AdminGuard)
-    @Get(':id')
+    @Get('leaders')
+    findLeaders(): Promise<Member[]> {
+       let lol = this.memberService.findLeaders();
+         console.log(lol);
+       return lol;
+    }
+
+    @UseGuards(JwtAuthGuard, AdminGuard)
+    @Get('/:id([0-9a-fA-F]{24})')
     async findOneById(@Param('id') id: string) {
         return this.memberService.findOneById(id);
     }
 
     @UseGuards(JwtAuthGuard, AdminGuard)
-    @Post(':id')
+    @Post('/:id([0-9a-fA-F]{24})')
     async update(@Param('id') id: string, @Body() createMemberDto: CreateMemberDto) {
         return this.memberService.update(id, createMemberDto);
     }
+
+    
 
     // @UseGuards(JwtAuthGuard, AdminGuard)
     // @Post(':id/ordinance')
