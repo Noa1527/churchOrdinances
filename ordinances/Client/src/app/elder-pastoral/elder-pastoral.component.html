@@ -22,7 +22,7 @@
       class="example-list"
       [cdkDropListEnterPredicate]="teamLimit"
       (cdkDropListDropped)="drop($event)">
-      <div class="example-box" *ngFor="let team" cdkDrag>{{getMemberName(team)}}</div>
+      <div class="example-box" *ngFor="let member of team" cdkDrag>{{getMemberName(member._id)}}</div>
     </div>
   </div>
 </div>

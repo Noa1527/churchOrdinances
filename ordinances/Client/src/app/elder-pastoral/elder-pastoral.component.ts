@@ -16,13 +16,17 @@ export class ElderPastoralComponent implements OnInit {
   ngOnInit() {
     this.teamsService.getLeaders().subscribe((leaders: any) => {
       this.pretriseMembers = leaders;
-    });
   
-    this.teamsService.getTeams().subscribe((teams: any) => {
-      if (teams !== undefined) {
-        this.teams = teams;
-      }
-      
+      this.teamsService.getTeams().subscribe((teams: any) => {
+        if (teams !== undefined) {
+          this.teams = teams.map((team: any) => {
+            return team.members.map((member: any) => {
+              let memberDetail = this.pretriseMembers.find((m: any) => m._id === member);
+              return memberDetail ? memberDetail : member;
+            });
+          });
+        }
+      });
     });
   }
 
@@ -59,6 +63,10 @@ export class ElderPastoralComponent implements OnInit {
   }
   
   getMemberName(id: string): string {
+    console.log('id', id);
+    let momo = this.pretriseMembers.find(m => console.log('m', m));
+    
+    
     let member = this.pretriseMembers.find(m => m._id === id);
     console.log('member', member);
     
