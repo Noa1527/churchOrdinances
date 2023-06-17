@@ -1,17 +1,18 @@
 /** @type {import('tailwindcss').Config} */
-module.exports = {
-  purge: {
-    enabled: true,
-    content: [
-      './src/**/*.{html,ts}',
-    ]
-  },
-  darkMode: false, // or 'media' or 'class'
-  theme: {
-    extend: {},
-  },
-  variants: {
-    extend: {},
-  },
-  plugins: [],
-}
+export const content = [];
+export const purge = {
+  enabled: true,
+  content: [
+    './src/**/*.html',
+    './src/**/*.ts',
+  ]
+};
+export const darkMode = false;
+export const variants = {
+  extend: {},
+};
+export const theme = {
+  extend: {},
+};
+export const plugins = [];
+
