@@ -1,16 +1,18 @@
-<div cdkDropListGroup>
-  <div class="example-container">
-    <h2>Membres de la prêtrise</h2>
-
-    <div
-      cdkDropList
-      id="pretriseMembers"
-      [cdkDropListData]="pretriseMembers"
-      class="example-list"
-      (cdkDropListDropped)="drop($event)">
-      <div class="example-box" *ngFor="let member of pretriseMembers" cdkDrag>{{member.firstName + ' ' + member.lastName}}</div>
-    </div>
-  </div> 
+<div cdkDropListGroup style="margin:10px; padding:10px;">
+  <div>
+    <div class="example-container">
+      <h2>Membres de la prêtrise</h2>
+  
+      <div
+        cdkDropList
+        id="pretriseMembers"
+        [cdkDropListData]="pretriseMembers"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)">
+        <div class="example-box" *ngFor="let member of pretriseMembers" cdkDrag>{{member.firstName + ' ' + member.lastName}}</div>
+      </div>
+    </div> 
+  </div>
 
   <div class="example-container" *ngFor="let team of teams; index as i">
     <h2>Équipe {{i + 1}}</h2>
