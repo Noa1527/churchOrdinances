@@ -20,6 +20,13 @@ export class MemberService {
          return this.http.get<any>('/api/member');
     }
 
+    findLeaders(): Observable<any> {
+        return this.http.get<any>('/api/member/leaders');
+    }
+    findWomenLeaders(): Observable<any> {
+        return this.http.get<any>('/api/member/WomenLeaders');
+    }
+
     // getAllMembersByRoleBP(role: string): Observable<any> {
     //     return this.http.get<any>(`/api/member/${role}`);
     // }

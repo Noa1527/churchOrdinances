@@ -37,10 +37,12 @@ export class ElderComponent implements OnInit {
   }
 
   getMembers(): void {
-    this.memberService.getAllMembers().subscribe((members: any[]) => {
-      this.member = new MatTableDataSource(members);
+    this.memberService.findLeaders().subscribe((leaders: any[]) => {
+        this.member = new MatTableDataSource(leaders);
     });
   }
+
+
 
   getAge(birthDate: Date): number {
     const today = new Date();

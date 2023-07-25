@@ -82,11 +82,26 @@ export class MemberService {
                 path: 'leaderRoles',
                 match: { roles: { $in: [Roles.BranchPresident, Roles.EldersQuorum] } }
             })
+            .populate('ordinance blessing')
             .exec(); 
         leaders = leaders.filter(member => member.leaderRoles !== null);
         console.log('leader -->',leaders);
         return leaders;
     }
-
-
+    
+    async findWomenLeaders(): Promise<Member[]> {
+        let leaders = await this.memberModel.find()
+            .populate({
+                path: 'leaderRoles',
+                match: { roles: { $in: [Roles.ReliefSociety, Roles.Primary, Roles.YoungWomen] } }
+            })
+            .populate('ordinance blessing')
+            .exec(); 
+        leaders = leaders.filter(member => member.leaderRoles !== null);
+        console.log('leader -->',leaders);
+        return leaders;
+    }
+    // async findAllPriest(): Promise<Member[]>{
+        
+    // }
 }

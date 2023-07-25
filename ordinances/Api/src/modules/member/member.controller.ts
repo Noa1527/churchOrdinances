@@ -31,6 +31,16 @@ export class MemberController {
     }
 
     @UseGuards(JwtAuthGuard, AdminGuard)
+    @Get('womenLeaders')
+    findWomenLeaders(): Promise<Member[]> {
+       let lol = this.memberService.findWomenLeaders();
+         console.log(lol);
+       return lol;
+    }
+
+
+
+    @UseGuards(JwtAuthGuard, AdminGuard)
     @Get('/:id([0-9a-fA-F]{24})')
     async findOneById(@Param('id') id: string) { 
         return this.memberService.findOneById(id);
