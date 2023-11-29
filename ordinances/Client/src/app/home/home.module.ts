@@ -12,6 +12,7 @@ import { PrimaireModule } from '../primaire/primaire.module';
 import { SocieteModule } from '../societe/societe.module';
 import { AuthService } from '../auth/service/auth.service';
 import { ElderPastoralModule } from '../elder-pastoral/elder-pastoral.module';
+import { ElderSmsMailerModule } from '../elder-sms-mailer/elder-sms-mailer.module';
 
 const routes: Routes = [
   { 
@@ -34,6 +35,7 @@ const routes: Routes = [
     BpModule,
     ElderModule,
     ElderPastoralModule,
+    ElderSmsMailerModule,
     JeuneFillesModule,
     JeuneGensModule,
     PrimaireModule,

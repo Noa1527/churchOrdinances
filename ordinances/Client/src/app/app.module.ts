@@ -25,6 +25,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { RouterModule } from '@angular/router';
 import { httpInterceptorProviders } from './http-interceptors';
 import { MatCardModule } from '@angular/material/card';
+import { ElderSmsMailerComponent } from './elder-sms-mailer/elder-sms-mailer.component';
 
 @NgModule({
   declarations: [

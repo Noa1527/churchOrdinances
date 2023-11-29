@@ -1,6 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
 import { TeamsService } from './services/elder-pastoral.service';
+import { Teams } from './services/team.type';
+import { Observable, Subject, map, switchMap, takeUntil } from 'rxjs';
+import { Elders } from './services/elder.type';
 
 @Component({
   selector: 'app-elder-pastoral',
@@ -10,30 +13,43 @@ import { TeamsService } from './services/elder-pastoral.service';
 export class ElderPastoralComponent implements OnInit {
   pretriseMembers: any[] = [];
   teams: any[][] = Array(12).fill(null).map(() => []);
+  public teams$!: Observable<Teams | null>;
+  public elders$!: Observable<Elders | null>;
+  public team!: Teams | null;
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
 
-  constructor(private teamsService: TeamsService) {}
+  constructor(private _teamsService: TeamsService) {}
 
   ngOnInit() {
-    this.teamsService.getLeaders().subscribe((leaders: any) => {
-      this.pretriseMembers = leaders;
-  
-      this.teamsService.getTeams().subscribe((teams: any) => {
+    this.teams$ = this._teamsService.teams$;
+    this.elders$ = this._teamsService.elders$;
+
+    this._teamsService.getLeaders().pipe(
+      switchMap((leaders: any) => {
+        this.pretriseMembers = leaders;
+        return this._teamsService.getTeams();
+      }),
+      map((teams: any) => {
         if (teams !== undefined) {
-          this.teams = teams.map((team: any) => {
+          return teams.map((team: any) => {
             return team.members.map((member: any) => {
               let memberDetail = this.pretriseMembers.find((m: any) => m._id === member);
               return memberDetail ? memberDetail : member;
             });
           });
         }
-      });
+      }),
+      takeUntil(this._unsubscribeAll)
+    ).subscribe((teams) => {
+      this.teams = teams;
+      console.log('this.team', this.team);
     });
   }
 
   drop(event: CdkDragDrop<any[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-      console.log('event', event);
+      // console.log('event', event);
       
     } else {
       transferArrayItem(
@@ -42,18 +58,18 @@ export class ElderPastoralComponent implements OnInit {
         event.previousIndex,
         event.currentIndex,
       );
-        console.log(event.previousContainer.data,
-          event.container.data,
-          event.previousIndex,
-          event.currentIndex,); 
+        // console.log(event.previousContainer.data,
+        //   event.container.data,
+        //   event.previousIndex,
+        //   event.currentIndex,); 
         
       if (event.previousContainer.id === 'pretriseMembers') {
-        this.teamsService.updateTeam(event.container.id, { members: event.container.data.map(m => m._id) }).subscribe();
+        this._teamsService.updateTeam(event.container.id, { members: event.container.data.map(m => m._id) }).subscribe();
       } else if (event.container.id === 'pretriseMembers') {
-        this.teamsService.updateTeam(event.previousContainer.id, { members: event.previousContainer.data.map(m => m._id) }).subscribe();
+        this._teamsService.updateTeam(event.previousContainer.id, { members: event.previousContainer.data.map(m => m._id) }).subscribe();
       } else {
-        this.teamsService.updateTeam(event.previousContainer.id, { members: event.previousContainer.data.map(m => m._id) }).subscribe();
-        this.teamsService.updateTeam(event.container.id, { members: event.container.data.map(m => m._id) }).subscribe();
+        this._teamsService.updateTeam(event.previousContainer.id, { members: event.previousContainer.data.map(m => m._id) }).subscribe();
+        this._teamsService.updateTeam(event.container.id, { members: event.container.data.map(m => m._id) }).subscribe();
       }
     }
   }
@@ -63,12 +79,12 @@ export class ElderPastoralComponent implements OnInit {
   }
   
   getMemberName(id: string): string {
-    console.log('id', id);
-    let momo = this.pretriseMembers.find(m => console.log('m', m));
+    // console.log('id', id);
+    // let momo = this.pretriseMembers.find(m => console.log('m', m));
     
     
     let member = this.pretriseMembers.find(m => m._id === id);
-    console.log('member', member);
+    // console.log('member', member);
     
     if (!member) {
       this.teams.forEach(team => {

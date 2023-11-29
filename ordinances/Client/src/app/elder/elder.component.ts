@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Member } from '../intefaces/member.interface';
 import { MatTableDataSource } from '@angular/material/table';
 import { MemberService } from '../services/member.service';
+import { filter } from 'rxjs';
+import { Member, Members } from '../services/member.type';
 
 @Component({
   selector: 'app-elder',
@@ -33,16 +34,16 @@ export class ElderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getMembers();
-  }
+  this.memberService.members$.pipe(
+    filter((members: Members | null): members is Members => members !== null),
+  ).subscribe((members: Members) => {
+    this.member = new MatTableDataSource(members);
+  });
 
-  getMembers(): void {
-    this.memberService.findLeaders().subscribe((leaders: any[]) => {
-        this.member = new MatTableDataSource(leaders);
-    });
-  }
+  this.memberService.findLeaders().subscribe();
+}
 
-
+  
 
   getAge(birthDate: Date): number {
     const today = new Date();
