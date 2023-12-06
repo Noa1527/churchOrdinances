@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, HttpCode, HttpStatus, Param, Post, Put, UseGuards } from '@nestjs/common';
 import { MemberService } from './member.service';
 import { AdminGuard } from '../auth/guards/admin.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
@@ -38,20 +38,27 @@ export class MemberController {
        return lol;
     }
 
-
-
     @UseGuards(JwtAuthGuard, AdminGuard)
     @Get('/:id([0-9a-fA-F]{24})')
     async findOneById(@Param('id') id: string) { 
         return this.memberService.findOneById(id);
     }
 
-    @UseGuards(JwtAuthGuard, AdminGuard)
-    @Post('/:id([0-9a-fA-F]{24})')
-    async update(@Param('id') id: string, @Body() createMemberDto: CreateMemberDto) {
+    // @UseGuards(JwtAuthGuard, AdminGuard)
+    // @Post('/:id([0-9a-fA-F]{24})')
+    // async update(@Param('id') id: string, @Body() createMemberDto: CreateMemberDto) {
+    //     return this.memberService.update(id, createMemberDto);
+    // }
+
+    // @UseGuards(JwtAuthGuard, AdminGuard)
+    @Put('/:id')
+    async updateOne(@Param('id') id: string, @Body() createMemberDto: CreateMemberDto) {
+        console.log(createMemberDto);
+        console.log(id);
+        
+        
         return this.memberService.update(id, createMemberDto);
     }
-
     
 
     // @UseGuards(JwtAuthGuard, AdminGuard)

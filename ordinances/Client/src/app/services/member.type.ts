@@ -1,4 +1,5 @@
 import { Blessing } from "./blessings/blessing.type";
+import { Family } from "./familes/family.type";
 import { Ordinance } from "./ordinaces/ordinance.type";
 
 export enum GenderType {
@@ -28,6 +29,7 @@ export interface Member {
     _ordinance: Ordinance;
     _blessing: Blessing;
     gender?: GenderType
+    _family: Family;
 }
 
 export type Members = Member[];

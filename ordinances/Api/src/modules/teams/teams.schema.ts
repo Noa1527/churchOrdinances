@@ -14,6 +14,10 @@ export class Team {
 
   @Prop([String])
   members: string[];
+
+  @Prop([String])
+  families: string[];
+
 }
 
 export const TeamSchema = SchemaFactory.createForClass(Team);

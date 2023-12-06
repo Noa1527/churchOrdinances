@@ -1,13 +1,19 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { Member, MemberDocument } from './member.schema';
 import { InjectModel } from '@nestjs/mongoose';
-import mongoose, { Model } from 'mongoose';
+import mongoose, { Model, Types } from 'mongoose';
 import { CreateMemberDto } from './dto/create-member.dto';
 import { OrdinanceService } from '../ordinance/ordinance.service';
 import { BlessingService } from '../blessing/blessing.service';
 import { LeaderRoleService } from '../leader_role/leader_role.service';
 import { log } from 'console';
 import { Roles } from '../leader_role/leader_role.schema';
+import { FamilyService } from '../family/family.service';
+import { ObjectId } from 'mongodb';
+interface Family {
+   _id: string;
+   name: string;
+}
 
 @Injectable()
 export class MemberService {
@@ -16,8 +22,10 @@ export class MemberService {
         private readonly ordinanceService: OrdinanceService,
         private readonly blessingService: BlessingService,
         private readonly leaderRoleService: LeaderRoleService,
+        private readonly _familyService: FamilyService
 
     ) {}
+
 
     async create(member: CreateMemberDto): Promise<Member> {
         const newMember = new this.memberModel(member);
@@ -37,13 +45,39 @@ export class MemberService {
             newMember.leaderRoles = newLeaderRoles._id;
         }
 
+        if (member._family) {
+            const newFamily = await this._familyService.create(member._family);
+            newMember._family = newFamily._id;
+            
+        }
+
         return newMember.save();
     }
 
     async update(id: string, member: CreateMemberDto): Promise<Member> {
-        const birthDate = this.convertBirthDate(member.birthDate);
-        return this.memberModel.findByIdAndUpdate(id, { ...member, birthDate }, { new: true });
-    }
+        const updatedMember = await this.memberModel.findById(id);
+        updatedMember.birthDate = this.convertBirthDate(member.birthDate);
+      
+        if (member.ordinance) {
+          const updatedOrdinance = await this.ordinanceService.update(updatedMember.ordinance.toString(), member.ordinance);
+          updatedMember.ordinance = updatedOrdinance._id;
+        }
+        
+        if (member.blessing) {
+          const updatedBlessing = await this.blessingService.update(updatedMember.blessing.toString(), member.blessing);
+          updatedMember.blessing = updatedBlessing._id;
+        }
+        if (member.leaderRoles) {
+          const updatedLeaderRoles = await this.leaderRoleService.update(updatedMember.leaderRoles.toString(), member.leaderRoles);
+          updatedMember.leaderRoles = updatedLeaderRoles._id;
+        }
+        if (member._family) {
+          const updatedFamily = await this._familyService.update(updatedMember._family.toString(), member._family);
+          updatedMember._family = new Types.ObjectId(updatedFamily._id);
+        }
+      
+        return updatedMember.save();
+      }
 
     private convertBirthDate(birthDate: string): Date {
         const [day, month, year] = birthDate.split("/"); // birthDate is string here
@@ -55,7 +89,7 @@ export class MemberService {
     }
 
     async findAll() {
-        return await this.memberModel.find().populate(['ordinance', 'blessing']).exec();
+        return await this.memberModel.find().populate(['ordinance', 'blessing']).sort({ firstName: 1 }).exec();
     }
 
     async findOneById(id: string) {

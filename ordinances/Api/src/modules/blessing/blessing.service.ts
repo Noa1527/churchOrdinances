@@ -5,15 +5,15 @@ import { InjectModel } from '@nestjs/mongoose';
 
 @Injectable()
 export class BlessingService {
-    constructor(@InjectModel(Blessing.name) private blessingModel: Model<BlessingDocument>) {}
+    constructor(@InjectModel(Blessing.name) private _blessingModel: Model<BlessingDocument>) {}
 
     async create(blessing: Partial<Blessing>): Promise<BlessingDocument> {
-        const newOrdinance = new this.blessingModel(blessing);
+        const newOrdinance = new this._blessingModel(blessing);
         return newOrdinance.save();
     }
 
-    async update() {
-        return 'update blessing';
+    async update(id: string, blessing: Partial<Blessing>): Promise<BlessingDocument> {
+        return this._blessingModel.findByIdAndUpdate(id, { ...blessing }, { new: true });
     }
 
     

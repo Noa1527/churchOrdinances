@@ -14,6 +14,12 @@ export class TeamsService {
     return createdTeam.save();
   }
 
+  // team = _id : 0097654433 _familly = _id : 0097654433
+  // familly = _id : 0097654433
+  // async createFamily(team: Partial<Team>): Promise<Team> {
+
+  // }
+
   async findAll(): Promise<Team[]> {
     return this.teamModel.find().exec();
   }

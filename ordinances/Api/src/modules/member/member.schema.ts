@@ -10,12 +10,12 @@ export type MemberDocument = HydratedDocument<Member>;
 
 @Schema()
 export class Member {
+    
+    @Prop({required: true})
+    lastName: string;
 
     @Prop({required: true})
     firstName: string;
-
-    @Prop({required: true})
-    lastName: string;
     
     @Prop({required: true})
     email: string;
@@ -40,6 +40,9 @@ export class Member {
 
     @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Blessing' })
     blessing: mongoose.Types.ObjectId;
+
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'Family' })
+    _family: mongoose.Types.ObjectId;
 }
 
 export const MemberSchema = SchemaFactory.createForClass(Member);

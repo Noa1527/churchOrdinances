@@ -15,6 +15,7 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import { MailService } from './modules/mail/mail.service';
 import { MailController } from './modules/mail/mail.controller';
 import { MailModule } from './modules/mail/mail.module';
+import { FamilyModule } from './modules/family/family.module';
 
 @Module({
   imports: [
@@ -51,6 +52,7 @@ import { MailModule } from './modules/mail/mail.module';
     TeamsModule,
     MailerModule,
     MailModule,
+    FamilyModule,
 
   ],
   controllers: [AppController, MailController],

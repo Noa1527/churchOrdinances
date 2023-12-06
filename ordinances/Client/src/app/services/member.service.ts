@@ -19,6 +19,10 @@ export class MemberService {
 
     private _members: BehaviorSubject<Members | null> = new BehaviorSubject<Members | null>(null);
     private _member: BehaviorSubject<Member | null> = new BehaviorSubject<Member | null>(null);
+    private _leaders: BehaviorSubject<Members | null> = new BehaviorSubject<Members | null>(null);
+    private _allMembers: BehaviorSubject<Members | null> = new BehaviorSubject<Members | null>(null);
+
+
 
     // -----------------------------------------------------------------------------------------------------
     // @ Accessors
@@ -45,19 +49,27 @@ export class MemberService {
         return this._member.asObservable();
     }
 
-    getAllMembers(): Observable<Members> {
-         return this.http.get<Members>('/api/member').pipe(
-            tap((members: any) => {
-                this.members = members;
-            })
-         );
-    }
+    get leaders$(): Observable<Members | null> {
+        return this._leaders.asObservable();
+      }
+      
+      get allMembers$(): Observable<Members | null> {
+        return this._allMembers.asObservable();
+      }
 
     findLeaders(): Observable<Members> {
         return this.http.get<Members>('/api/member/leaders').pipe(
-            tap((leaders: any) => {
-                this.members = leaders;
-            })
+          tap((leaders: any) => {
+            this._leaders.next(leaders);
+          })
+        );
+    }
+      
+    getAllMembers(): Observable<Members> {
+        return this.http.get<Members>('/api/member').pipe(
+          tap((members: any) => {
+            this._allMembers.next(members);
+          })
         );
     }
     findWomenLeaders(): Observable<Members> {

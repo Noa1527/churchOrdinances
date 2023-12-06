@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Member } from '../intefaces/member.interface';
+import { Member } from 'src/app/services/member.type';
 import { MemberService } from '../services/member.service';
 
 @Component({

@@ -1,12 +1,16 @@
 <div class="app-bp">
-    <mat-table [dataSource]="member" class="mat-elevation-z8">
+    <mat-table [dataSource]="member" class="mat-elevation-z8" >
 
       
   
         <!-- First Name Column -->
         <ng-container matColumnDef="firstName">
           <mat-header-cell *matHeaderCellDef> First Name </mat-header-cell>
-          <mat-cell *matCellDef="let member"> {{member.firstName}} </mat-cell>
+          <mat-cell *matCellDef="let member"> 
+            <a (click)="createOrEditAgency(member)">
+              {{member.firstName}} 
+            </a>
+          </mat-cell>
         </ng-container>
 
         <!-- <ng-container matColumnDef="firstName">
@@ -130,7 +134,7 @@
           <mat-cell *matCellDef="let member">
               <mat-checkbox [checked]="member.comments" disabled></mat-checkbox>  
           </mat-cell>
-      </ng-container>
+        </ng-container>
 
   
         <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>

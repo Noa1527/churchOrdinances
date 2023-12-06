@@ -34,13 +34,13 @@ export class ElderComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  this.memberService.members$.pipe(
-    filter((members: Members | null): members is Members => members !== null),
-  ).subscribe((members: Members) => {
-    this.member = new MatTableDataSource(members);
-  });
-
-  this.memberService.findLeaders().subscribe();
+    this.memberService.leaders$.pipe(
+      filter((members: Members | null): members is Members => members !== null),
+    ).subscribe((members: Members) => {
+      this.member = new MatTableDataSource(members);
+    });
+    
+    this.memberService.findLeaders().subscribe();
 }
 
   

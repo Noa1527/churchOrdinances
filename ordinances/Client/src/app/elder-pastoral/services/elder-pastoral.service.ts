@@ -62,6 +62,8 @@ export class TeamsService {
   }
 
   updateTeam(seq: string, team: any): Observable<Team> {
+    console.log('team', team);
+    
     return this.teams$.pipe(
       take(1),
       switchMap((teams: Teams | null) => 
@@ -74,10 +76,10 @@ export class TeamsService {
                   ...team,
                   ...response
                 };
-                this.teams = teams;
+                this._teams.next(teams);
               }
             }
-            this.team = {...team, ...response};
+            this._team.next({...team, ...response});
           })
         )
       )

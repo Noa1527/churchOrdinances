@@ -12,7 +12,7 @@ export class OrdinanceService {
         return newOrdinance.save();
     }
     
-    async update(id: string, ordinance: Partial<Ordinance>): Promise<Ordinance> {
+    async update(id: string, ordinance: Partial<Ordinance>): Promise<OrdinanceDocument> {
         return this.ordinanceModel.findByIdAndUpdate(id, { ...ordinance }, { new: true });
     }
 }
