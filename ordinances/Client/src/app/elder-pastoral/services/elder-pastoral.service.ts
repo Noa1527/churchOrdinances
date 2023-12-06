@@ -62,13 +62,20 @@ export class TeamsService {
   }
 
   updateTeam(seq: string, team: any): Observable<Team> {
+    console.log('seq', seq);
     console.log('team', team);
+      const numStr = seq.replace(/\D/g, '');
+      console.log(numStr); // Affiche : "0"
+    
     
     return this.teams$.pipe(
       take(1),
       switchMap((teams: Teams | null) => 
-        this.http.patch<Team>(`/api/teams/${seq}`, team).pipe(
+        this.http.patch<Team>(`/api/teams/${numStr}`, team).pipe(
           tap((response: Team) => {
+            console.log('response ---->', response);
+            console.log('teams ---->', teams);
+            
             if (teams) {
               const index = teams.findIndex((o) => o._id === response._id);
               if (index >= 0) {

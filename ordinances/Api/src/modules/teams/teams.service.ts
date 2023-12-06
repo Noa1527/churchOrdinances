@@ -30,6 +30,8 @@ export class TeamsService {
 
 
   async update(seq: string, team: Partial<Team>): Promise<Team> {
+    console.log('team', team);
+    console.log('seq', seq);
     return this.teamModel.findOneAndUpdate({ seq: seq }, team, { new: true }).exec();
   }
 

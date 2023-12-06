@@ -28,50 +28,25 @@
   </div>
 
   <div class="example-container" *ngFor="let team of teams; index as i">
-    <h2>Équipe {{i + 1}}</h2>
+      <h2>Équipe {{i + 1}}</h2>
+      <div
+        cdkDropList
+        [id]="i.toString()"
+        [cdkDropListData]="team.members"
+        class="example-list"
+        (cdkDropListDropped)="drop($event)"
+      >
+        <div class="team-box" *ngFor="let member of team.members" cdkDrag>{{getMemberName(member._id || '')}}</div>
+      </div>
+
     <div
       cdkDropList
-      [id]="i.toString()"
-      [cdkDropListData]="team.members"
+      [id]="'families' + i.toString()"
+      [cdkDropListData]="team.families"
       class="example-list"
       (cdkDropListDropped)="drop($event)"
     >
-      <div class="team-box" *ngFor="let member of team.members" cdkDrag>{{getMemberName(member._id || '')}}</div>
+      <div class="family-box" *ngFor="let family of team.families" cdkDrag>{{getFamilyName(family._id || '')}}</div>
     </div>
-
-    <div
-    cdkDropList
-    [id]="'families' + i.toString()"
-    [cdkDropListData]="team.families"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)"
-  >
-    <div class="family-box" *ngFor="let family of team.families" cdkDrag>{{getFamilyName(family._id || '')}}</div>
-  </div>
   </div>
 </div>
- <!-- <div class="example-container" *ngFor="let team of teams; index as i">
-    <h2>Équipe {{i + 1}}</h2>
-    <div
-      cdkDropList
-      [id]="i.toString()"
-      [cdkDropListData]="team"
-      class="example-list"
-      (cdkDropListDropped)="drop($event)"
-    >
-      <div class="team-box" *ngFor="let member of team" cdkDrag>{{getMemberName(member._id)}}</div>
-    </div>
-
-    <div
-    cdkDropList
-    [id]="'families' + i.toString()"
-    [cdkDropListData]="team"
-    class="example-list"
-    (cdkDropListDropped)="drop($event)"
-  >
-    <div class="family-box" *ngFor="let family of team" cdkDrag>{{getFamilyName(family._id)}}
-    </div>
-  </div>
-  </div>
-</div>-->
-      <!--[cdkDropListEnterPredicate]="teamLimit"-->

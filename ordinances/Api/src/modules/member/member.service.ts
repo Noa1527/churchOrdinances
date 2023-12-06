@@ -119,7 +119,7 @@ export class MemberService {
             .populate('ordinance blessing')
             .exec(); 
         leaders = leaders.filter(member => member.leaderRoles !== null);
-        console.log('leader -->',leaders);
+        // console.log('leader -->',leaders);
         return leaders;
     }
     
@@ -132,7 +132,7 @@ export class MemberService {
             .populate('ordinance blessing')
             .exec(); 
         leaders = leaders.filter(member => member.leaderRoles !== null);
-        console.log('leader -->',leaders);
+        // console.log('leader -->',leaders);
         return leaders;
     }
     // async findAllPriest(): Promise<Member[]>{

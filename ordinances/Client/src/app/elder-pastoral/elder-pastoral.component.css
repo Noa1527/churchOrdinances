@@ -33,7 +33,7 @@
 
   .family-box {
     padding: 20px 10px;
-    border-bottom: solid 1px #ccc;
+    border-bottom: solid 1px rgb(100 116 139);
     color: #000;
     background-color: rgb(203 213 225);
     display: flex;
