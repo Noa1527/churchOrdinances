@@ -46,5 +46,4 @@ export class CreateMemberDto {
     @Type(() => CreateFamilyDto)
     _family?: CreateFamilyDto; // Use CreateLeaderRoleDto
 
-
 }

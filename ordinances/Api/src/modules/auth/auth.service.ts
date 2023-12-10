@@ -54,6 +54,8 @@ export class AuthService {
     }
 
     // Enregistre le nouvel utilisateur dans la base de données
+    console.log('newUser',newUser);
+    
     return this.userService.create(newUser);
 }
 

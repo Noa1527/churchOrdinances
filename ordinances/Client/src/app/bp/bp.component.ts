@@ -1,9 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MemberService } from '../services/member.service';
 import { Member, Members } from 'src/app/services/member.type';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog } from '@angular/material/dialog';
-import { filter } from 'rxjs';
+import { Subject, filter, takeUntil } from 'rxjs';
 import { MemberDialogComponent } from '../components/member-dialog/member-dialog.component';
 
 @Component({
@@ -11,9 +11,9 @@ import { MemberDialogComponent } from '../components/member-dialog/member-dialog
   templateUrl: './bp.component.html',
   styleUrls: ['./bp.component.css']
 })
-export class BpComponent implements OnInit {
-
-  member: MatTableDataSource<Member>;
+export class BpComponent implements OnInit, OnDestroy {
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
+  public member: MatTableDataSource<Member>;
   
   displayedColumns: string[] = [
     'firstName', 
@@ -34,29 +34,24 @@ export class BpComponent implements OnInit {
   constructor(
     private memberService: MemberService,
     private dialog: MatDialog,
-    ) { 
+  ) { 
     this.member = new MatTableDataSource();
   }
 
   ngOnInit(): void {
-    this.memberService.allMembers$.pipe(
+    this.memberService.allMembers$.pipe(takeUntil(this._unsubscribeAll),
       filter((members: Members | null): members is Members => members !== null),
     ).subscribe((members: Members) => {
       this.member = new MatTableDataSource(members);
     });
     
-    this.memberService.getAllMembers().subscribe();
+    this.memberService.getAllMembers().pipe(takeUntil(this._unsubscribeAll)).subscribe();
   }
 
-  // getMembers(): void {
-
-  //   this.memberService.getAllMembers().subscribe((members: any[]) => {
-  //     console.log(members);
-      
-  //     this.member = new MatTableDataSource(members);
-
-  //   });
-  // }
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
+  }
 
   getAge(birthDate: Date): number {
     const today = new Date();
@@ -69,42 +64,36 @@ export class BpComponent implements OnInit {
     return age;
   }
 
-  // applyFilter(event: Event, field: string) {
-  //   const filterValue = (event.target as HTMLInputElement).value;
-  //   this.member.filterPredicate = (data: any, filter: string) => {
-  //     return data[field].toLowerCase().includes(filter);
-  //   };
-  //   this.member.filter = filterValue.trim().toLowerCase();
-  // }
-
   filterValues: Record<string, string> = {};
   
-  applyFilter(filterValue: string, columnName: string) {
+  // public applyFilter(filterValue: string, columnName: string) {
 
-    this.filterValues[columnName] = filterValue;
-    this.member.filterPredicate = (data: any, filter: string) => {
-      let filterArray = filter.split(',');
+  //   this.filterValues[columnName] = filterValue;
+  //   this.member.filterPredicate = (data: any, filter: string) => {
+  //     let filterArray = filter.split(',');
 
-      return filterArray.every(filterValue => {
-        let pair = filterValue.split(':');
-        return data[pair[0]].trim().toLowerCase().includes(pair[1]);
-      });
+  //     return filterArray.every(filterValue => {
+  //       let pair = filterValue.split(':');
+  //       return data[pair[0]].trim().toLowerCase().includes(pair[1]);
+  //     });
 
-    };
+  //   };
     
-    let finalFilter = Object.keys(this.filterValues).map(key => `${key}:${this.filterValues[key]}`).join(',');
-    this.member.filter = finalFilter.trim();
-  }
+  //   let finalFilter = Object.keys(this.filterValues).map(key => `${key}:${this.filterValues[key]}`).join(',');
+  //   this.member.filter = finalFilter.trim();
+  // }
  
   public createOrEditAgency(member?: Member): void {
+    
     const ref = this.dialog.open(MemberDialogComponent, {
         width: '100%',
     });
+
+    console.log('ref', ref);
+    
     
     if (member) {
-        ref.componentInstance.member = member;
+      ref.componentInstance.member = member;
     }
-}
-
-  
+  }
 }

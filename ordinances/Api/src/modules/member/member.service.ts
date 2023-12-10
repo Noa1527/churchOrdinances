@@ -89,13 +89,16 @@ export class MemberService {
     }
 
     async findAll() {
-        return await this.memberModel.find().populate(['ordinance', 'blessing']).sort({ firstName: 1 }).exec();
+        return await this.memberModel.find()
+        .populate(['ordinance', 'blessing', 'leaderRoles', '_family'])
+        .sort({ firstName: 1 })
+        .exec();
     }
 
-    async findOneById(id: string) {
-       let bibou = await this.memberModel.findById(id).populate(['ordinance', 'blessing', 'leaderRoles']).exec();
-         console.log(bibou);
-        return bibou;
+    async findOneById(id: string) { 
+      return await this.memberModel.findById(id)
+      .populate(['ordinance', 'blessing', 'leaderRoles', '_family'])
+      .exec();
     }
 
     async findOneByFirstName(firstName: string) {
@@ -117,6 +120,7 @@ export class MemberService {
                 match: { roles: { $in: [Roles.BranchPresident, Roles.EldersQuorum] } }
             })
             .populate('ordinance blessing')
+            .sort({ firstName: 1 })
             .exec(); 
         leaders = leaders.filter(member => member.leaderRoles !== null);
         // console.log('leader -->',leaders);
@@ -130,10 +134,9 @@ export class MemberService {
                 match: { roles: { $in: [Roles.ReliefSociety, Roles.Primary, Roles.YoungWomen] } }
             })
             .populate('ordinance blessing')
+            .sort({ firstName: 1 })
             .exec(); 
-        leaders = leaders.filter(member => member.leaderRoles !== null);
-        // console.log('leader -->',leaders);
-        return leaders;
+        return leaders.filter(member => member.leaderRoles !== null);
     }
     // async findAllPriest(): Promise<Member[]>{
         

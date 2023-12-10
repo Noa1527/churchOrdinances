@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
-import { Member } from 'src/app/services/member.type';
+import { Member, Members } from 'src/app/services/member.type';
 import { MemberService } from '../services/member.service';
+import { Subject, filter, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-societe',
@@ -10,7 +11,8 @@ import { MemberService } from '../services/member.service';
 })
 export class SocieteComponent implements OnInit {
 
-  member: MatTableDataSource<Member>;
+  private _unsubscribeAll: Subject<any> = new Subject<any>();
+  public member: MatTableDataSource<Member>;
   
   displayedColumns: string[] = [
     'firstName', 
@@ -32,20 +34,19 @@ export class SocieteComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getSocieteMembers();
-  }
-
-  getSocieteMembers(): void {
-    this.memberService.findWomenLeaders().subscribe((leaders: any[]) => {
-      console.log(leaders);
-      
-        this.member = new MatTableDataSource(leaders);
-        console.log(this.member);
-        
+    this.memberService.womenLeaders$.pipe(takeUntil(this._unsubscribeAll),
+      filter((members: Members | null): members is Members => members !== null),
+    ).subscribe((members: Members) => {
+      this.member = new MatTableDataSource(members);
     });
+
+    this.memberService.findWomenLeaders().pipe(takeUntil(this._unsubscribeAll)).subscribe();
   }
 
-
+  ngOnDestroy(): void {
+    this._unsubscribeAll.next(null);
+    this._unsubscribeAll.complete();
+  }
 
   getAge(birthDate: Date): number {
     const today = new Date();
@@ -57,14 +58,6 @@ export class SocieteComponent implements OnInit {
     }
     return age;
   }
-
-  // applyFilter(event: Event, field: string) {
-  //   const filterValue = (event.target as HTMLInputElement).value;
-  //   this.member.filterPredicate = (data: any, filter: string) => {
-  //     return data[field].toLowerCase().includes(filter);
-  //   };
-  //   this.member.filter = filterValue.trim().toLowerCase();
-  // }
 
   filterValues: Record<string, string> = {};
   
@@ -84,6 +77,4 @@ export class SocieteComponent implements OnInit {
     let finalFilter = Object.keys(this.filterValues).map(key => `${key}:${this.filterValues[key]}`).join(',');
     this.member.filter = finalFilter.trim();
   }
-
-  
 }

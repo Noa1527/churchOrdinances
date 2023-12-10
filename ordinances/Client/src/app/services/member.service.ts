@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BehaviorSubject, Observable, of, throwError } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { switchMap, take, tap } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { UserService } from 'src/app/user/service/user.service';
 import { Member, Members } from './member.type';
@@ -21,6 +21,7 @@ export class MemberService {
     private _member: BehaviorSubject<Member | null> = new BehaviorSubject<Member | null>(null);
     private _leaders: BehaviorSubject<Members | null> = new BehaviorSubject<Members | null>(null);
     private _allMembers: BehaviorSubject<Members | null> = new BehaviorSubject<Members | null>(null);
+    private _womenLeaders: BehaviorSubject<Members | null> = new BehaviorSubject<Members | null>(null);
 
 
 
@@ -36,10 +37,12 @@ export class MemberService {
         // Store the value
         this._member.next(value);
     }
+    
     set members(value: Members) {
         // Store the value
         this._members.next(value);
     }
+
     get members$(): Observable<Members | null> {
         console.log('_members', this._members);
         return this._members.asObservable();
@@ -51,13 +54,17 @@ export class MemberService {
 
     get leaders$(): Observable<Members | null> {
         return this._leaders.asObservable();
-      }
+    }
       
-      get allMembers$(): Observable<Members | null> {
+    get allMembers$(): Observable<Members | null> {
         return this._allMembers.asObservable();
-      }
+    }
 
-    findLeaders(): Observable<Members> {
+    get womenLeaders$(): Observable<Members | null> {
+        return this._womenLeaders.asObservable();
+    }
+
+    public findLeaders(): Observable<Members> {
         return this.http.get<Members>('/api/member/leaders').pipe(
           tap((leaders: any) => {
             this._leaders.next(leaders);
@@ -65,18 +72,62 @@ export class MemberService {
         );
     }
       
-    getAllMembers(): Observable<Members> {
+    public getAllMembers(): Observable<Members> {
         return this.http.get<Members>('/api/member').pipe(
           tap((members: any) => {
             this._allMembers.next(members);
           })
         );
     }
-    findWomenLeaders(): Observable<Members> {
+
+    public findWomenLeaders(): Observable<Members> {
         return this.http.get<Members>('/api/member/WomenLeaders').pipe(
             tap((leaders: any) => {
-                this.members = leaders;
+                this._womenLeaders.next(leaders);
             })
+        );
+    }
+    
+    public update(id: string, member: Member): Observable<Member> {
+        console.log('updateServiceArtisan', member);
+        return this.members$.pipe(
+            take(1),
+            switchMap((members: Members | null) =>
+                this.http.put<Member>(`/api/member/${id}`, member).pipe(
+                    tap((response: Member) => {
+                        if (members) {
+                            console.log('members update', members);
+                            
+                            const index = members.findIndex((o) => o._id === response._id);
+                            if (index >= 0) {
+                                members[index] = {
+                                    ...member,
+                                    ...response,
+                                };
+                                this.members = members;
+                            }
+                        }
+                        this.member = { ...member, ...response };
+                    }),
+                ),
+            ),
+        );
+    }
+
+    public create(form: Member): Observable<Member> {
+        return this.members$.pipe(
+            take(1),
+            switchMap((members: Members | null) =>
+                this.http.post<Member>(`/api/member/`, form).pipe(
+                    tap((response: Member) => {
+                        if (members) {
+                            this.members = [response, ...members];
+                        }
+
+                        this.member = response;
+                    }),
+                ),
+            ),
         );
     }
 

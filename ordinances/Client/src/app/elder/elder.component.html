@@ -1,48 +1,15 @@
 <div class="app-elder">
     <mat-table [dataSource]="member" class="mat-elevation-z8">
 
-      
-  
         <!-- First Name Column -->
         <ng-container matColumnDef="firstName">
           <mat-header-cell *matHeaderCellDef> First Name </mat-header-cell>
-          <mat-cell *matCellDef="let member"> {{member.firstName}} </mat-cell>
+          <mat-cell *matCellDef="let member"> 
+            <a (click)="createOrEditAgency(member)">
+              {{member.firstName}} 
+            </a> 
+          </mat-cell>
         </ng-container>
-
-        <!-- <ng-container matColumnDef="firstName">
-          <mat-header-cell *matHeaderCellDef> 
-              <div class="flex flex-col">
-                  <div class="order-1">
-                      <input matInput (keyup)="applyFilter($event, 'firstName')" placeholder="Filter">
-                  </div>
-                  <div class="order-2">
-                      No. Objet
-                  </div>
-              </div>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let element"> {{element.firstName}} </mat-cell>
-      </ng-container> -->
-
-      <!-- <ng-container matColumnDef="firstName">
-        <mat-header-cell *matHeaderCellDef> 
-          First Name 
-          <input matInput (keyup)="applyFilter($event.target.value, 'firstName')" placeholder="Filter">
-        </mat-header-cell>
-        <mat-cell *matCellDef="let member"> {{member.firstName}} </mat-cell>
-      </ng-container>-->
-      
-        
-
-        <!-- First Name Column 
-        <ng-container matColumnDef="firstName">
-          <mat-header-cell *matHeaderCellDef> 
-            First Name 
-            <mat-form-field class="example-full-width">
-              <input matInput (keyup)="applyFilter($event, 'firstName')" placeholder="Filter">
-            </mat-form-field>
-          </mat-header-cell>
-          <mat-cell *matCellDef="let member"> {{member.firstName}} </mat-cell>
-        </ng-container> -->
             
         <!-- Last Name Column -->
         <ng-container matColumnDef="lastName">

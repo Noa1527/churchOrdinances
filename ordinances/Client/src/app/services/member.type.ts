@@ -18,18 +18,18 @@ export enum LeaderRoles {
 }
 
 export interface Member {
-    _id: string;
-    firstName: string;
-    lastName: string;
-    email: string;
-    birthDate: Date;
-    phone: string;
-    comments: string[];
-    _leaderRoles: LeaderRoles;
-    _ordinance: Ordinance;
-    _blessing: Blessing;
+    _id?: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    birthDate?: Date;
+    phone?: string;
+    comments?: string[];
+    _leaderRoles?: LeaderRoles;
+    _ordinance?: Ordinance;
+    _blessing?: Blessing;
     gender?: GenderType
-    _family: Family;
+    _family?: Family;
 }
 
 export type Members = Member[];

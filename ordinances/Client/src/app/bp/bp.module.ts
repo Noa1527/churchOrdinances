@@ -7,6 +7,7 @@ import {MatPaginatorModule} from '@angular/material/paginator';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatDialogModule } from '@angular/material/dialog';
+import { MemberDialogModule } from '../components/member-dialog/member-dialog.module';
 
 
 
@@ -22,6 +23,7 @@ import { MatDialogModule } from '@angular/material/dialog';
     MatFormFieldModule,
     MatInputModule,
     MatDialogModule,
+    MemberDialogModule,
   ],
   exports: [
     BpComponent,
