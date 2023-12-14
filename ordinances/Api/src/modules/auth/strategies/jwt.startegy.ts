@@ -22,10 +22,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   //   return { userId: payload.sub, usernameField: payload.email, isAdmin: payload.isAdmin };
   // }
   async validate(payload: any) {
-    const isBlacklisted = this.authService.isBlacklisted(payload.jti);
-    if (isBlacklisted) {
-      throw new UnauthorizedException();
-    }
+    // const isBlacklisted = this.authService.isBlacklisted(payload.jti);
+    // if (isBlacklisted) {
+    //   throw new UnauthorizedException();
+    // }
     return { userId: payload.sub, usernameField: payload.email, isAdmin: payload.isAdmin };
   }
 }

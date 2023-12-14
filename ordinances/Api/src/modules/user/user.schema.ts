@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { HydratedDocument } from 'mongoose';
+import mongoose, { HydratedDocument } from 'mongoose';
 
 export enum Gender {
   Male = 'H',
@@ -23,20 +23,27 @@ export class User {
     @Prop({required: true})
     password: string;
     
-    @Prop({default: false})
+    @Prop({default: false, required: false})
     isAdmin: Boolean;
 
-    @Prop({default: false})
+    @Prop({default: false, required: false})
     isActive: Boolean;
 
-    @Prop({type: String, enum: Object.values(Gender), default: Gender.Male})
+    // @Prop()
+    // refreshToken: string;
+
+    @Prop({default: Date.now})
+    createdAt: Date;
+
+    @Prop({type: String, enum: Object.values(Gender)})
     gender: Gender;
 
     @Prop([{ type: String, ref: 'Comment' }])
     comments: string[];
 
-    @Prop({ type: String, ref: 'LeaderRoles' })
-    leader_roles: string;
+    @Prop({ type: mongoose.Schema.Types.ObjectId, ref: 'LeaderRoles' })
+    leaderRoles: mongoose.Types.ObjectId;
+
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);
