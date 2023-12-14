@@ -39,7 +39,7 @@ export class MemberDialogComponent implements OnInit{
       firstName: ['', Validators.required],
       lastName: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
-      birthDate: [formatDate(this.member?.birthDate), Validators.required],
+      birthDate: [this.member?.birthDate, Validators.required],
       phone: ['', Validators.required],
       gender: ['', Validators.required],
       ordinance: this._formBuilder.group({

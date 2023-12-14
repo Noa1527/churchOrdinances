@@ -154,7 +154,7 @@ export class ElderPastoralComponent implements OnInit {
         }
       });
       
-      return member ? member.firstName + ' ' + member.lastName : '';
+      return member ? `${member.firstName} - ${member.lastName} - N°${member.phone}` : '';
     }
 
     getFamilyName(id: string): string {
@@ -164,11 +164,13 @@ export class ElderPastoralComponent implements OnInit {
       this.teams.forEach(team => {
         const teamFamily = team.families.find(m => m._id === id);
         if (teamFamily) {
+          console.log('teamFamily', teamFamily);
+          
           family = teamFamily;
         }
       });
 
-      return family ? family.name : '';
+      return family ? `${family.name} - N°${family.phone} `: '';
     }
 
  
